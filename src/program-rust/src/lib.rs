@@ -1,5 +1,6 @@
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
+    log::sol_log_compute_units,
     account_info::{next_account_info, AccountInfo},
     entrypoint,
     entrypoint::ProgramResult,
@@ -12,7 +13,7 @@ use solana_program::{
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct GreetingAccount {
     /// number of greetings
-    pub counter: u32,
+    pub txt: String,
 }
 
 // Declare and export the program's entrypoint
@@ -22,8 +23,8 @@ entrypoint!(process_instruction);
 pub fn process_instruction(
     program_id: &Pubkey, // Public key of the account the hello world program was loaded into
     accounts: &[AccountInfo], // The account to say hello to
-    _instruction_data: &[u8], // Ignored, all helloworld instructions are hellos
-) -> ProgramResult {
+    instruction_data: &[u8], // Ignored, all helloworld instructions are hellos
+)->ProgramResult {
     msg!("Hello World Rust program entrypoint");
 
     // Iterating accounts is safer then indexing
@@ -36,13 +37,12 @@ pub fn process_instruction(
     if account.owner != program_id {
         msg!("Greeted account does not have the correct program id");
         return Err(ProgramError::IncorrectProgramId);
-    }
-
+    }    
 
     msg!("Start instruction decode");
     let message = GreetingAccount::try_from_slice(instruction_data).map_err(|err| {
-        msg!("Receiving message as string utf8 failed, {:?}", err);
-        ProgramError::InvalidInstructionData
+      msg!("Receiving message as string utf8 failed, {:?}", err);
+      ProgramError::InvalidInstructionData  
     })?;
     msg!("Greeting passed to program is {:?}", message);
 
@@ -51,7 +51,7 @@ pub fn process_instruction(
     data[..instruction_data.len()].copy_from_slice(&instruction_data);
 
     sol_log_compute_units();
-    msg!("Was sent message {}!", message.text);
+    msg!("Was sent message {}!", message.txt);
 
     // Increment and store the number of times the account has been greeted
     // let mut greeting_account = GreetingAccount::try_from_slice(&account.data.borrow())?;
