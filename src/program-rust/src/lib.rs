@@ -38,12 +38,27 @@ pub fn process_instruction(
         return Err(ProgramError::IncorrectProgramId);
     }
 
-    // Increment and store the number of times the account has been greeted
-    let mut greeting_account = GreetingAccount::try_from_slice(&account.data.borrow())?;
-    greeting_account.counter += 1;
-    greeting_account.serialize(&mut &mut account.data.borrow_mut()[..])?;
 
-    msg!("Greeted {} time(s)!", greeting_account.counter);
+    msg!("Start instruction decode");
+    let message = GreetingAccount::try_from_slice(instruction_data).map_err(|err| {
+        msg!("Receiving message as string utf8 failed, {:?}", err);
+        ProgramError::InvalidInstructionData
+    })?;
+    msg!("Greeting passed to program is {:?}", message);
+
+    let data = &mut &mut account.data.borrow_mut();
+    msg!("Start save instruction into data");
+    data[..instruction_data.len()].copy_from_slice(&instruction_data);
+
+    sol_log_compute_units();
+    msg!("Was sent message {}!", message.text);
+
+    // Increment and store the number of times the account has been greeted
+    // let mut greeting_account = GreetingAccount::try_from_slice(&account.data.borrow())?;
+    // greeting_account.counter += 1;
+    // greeting_account.serialize(&mut &mut account.data.borrow_mut()[..])?;
+
+    // msg!("Greeted {} time(s)!", greeting_account.counter);
 
     Ok(())
 }
