@@ -60,7 +60,7 @@ const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'helloworld-keypair.json');
  * The state of a greeting account managed by the hello world program
  */
 class GreetingAccount {
-  txt = '';
+  txt: string = '';
   constructor(fields: {txt: string} | undefined = undefined) {
     if (fields) {
       this.txt = fields.txt;
@@ -218,6 +218,7 @@ export async function sayHello(msg: string): Promise<void> {
  * Report the number of times the greeted account has been said hello to
  */
 export async function reportGreetings(): Promise<void> {
+  console.log('Retrieving message from greeting account');
   const accountInfo = await connection.getAccountInfo(greetedPubkey);
   if (accountInfo === null) {
     throw 'Error: cannot find the greeted account';
@@ -228,6 +229,7 @@ export async function reportGreetings(): Promise<void> {
     accountInfo.data,
   );
   console.log(
+    'Account',
     greetedPubkey.toBase58(),
     'has been greeted',
     greeting.txt,
