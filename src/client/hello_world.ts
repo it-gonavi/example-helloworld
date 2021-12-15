@@ -90,7 +90,7 @@ export async function establishConnection(): Promise<void> {
   const rpcUrl = await getRpcUrl();
   connection = new Connection(rpcUrl, 'confirmed');
   const version = await connection.getVersion();
-  console.log('Connection to cluster established:', rpcUrl, version);
+  console.log('Conexión con el cluster establecida:', rpcUrl, version);
 }
 
 /**
@@ -122,11 +122,11 @@ export async function establishPayer(): Promise<void> {
   }
 
   console.log(
-    'Using account',
+    'Nuestra dirección de billetera es',
     payer.publicKey.toBase58(),
-    'containing',
+    'la cual tiene',
     lamports / LAMPORTS_PER_SOL,
-    'SOL to pay for fees',
+    'SOL para pagar comisiones de transacciones',
   );
 }
 
