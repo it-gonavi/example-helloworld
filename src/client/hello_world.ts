@@ -158,7 +158,7 @@ export async function checkProgram(): Promise<void> {
   } else if (!programInfo.executable) {
     throw new Error(`Program is not executable`);
   }
-  console.log(`Using program ${programId.toBase58()}`);
+  console.log(`Usando el programa ${programId.toBase58()}`);
 
   // Derive the address (public key) of a greeting account from the program so that it's easy to find later.
   const GREETING_SEED = 'hello';
@@ -199,7 +199,7 @@ export async function checkProgram(): Promise<void> {
  * Say hello
  */
 export async function sayHello(msg: string): Promise<void> {
-  console.log('Saying hello to', greetedPubkey.toBase58());
+  console.log('Saludando a', greetedPubkey.toBase58());
   let messageAccount = new GreetingAccount();
   messageAccount.txt = msg;
   const instruction = new TransactionInstruction({
@@ -218,7 +218,7 @@ export async function sayHello(msg: string): Promise<void> {
  * Report the number of times the greeted account has been said hello to
  */
 export async function reportGreetings(): Promise<void> {
-  console.log('Retrieving message from greeting account');
+  console.log('Recuperando el mensaje de la cuenta que se saludo...');
   const accountInfo = await connection.getAccountInfo(greetedPubkey);
   if (accountInfo === null) {
     throw 'Error: cannot find the greeted account';
@@ -229,10 +229,10 @@ export async function reportGreetings(): Promise<void> {
     accountInfo.data,
   );
   console.log(
-    'Account',
+    'Cuenta',
     greetedPubkey.toBase58(),
-    'has been greeted',
+    'ha sido saludada',
     greeting.txt,
-    'time(s)',
+    'veces(s)',
   );
 }
