@@ -17,7 +17,7 @@ async function main() {
   await checkProgram();
 
   // Say hello to an account
-  await sayHello('holis!');
+  await sayHello('holis!___');
 
   // Find out how many times that account has been greeted
   await reportGreetings();
