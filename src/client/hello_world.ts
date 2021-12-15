@@ -15,7 +15,7 @@ import fs from 'mz/fs';
 import path from 'path';
 import * as borsh from 'borsh';
 
-import {getPayer, getRpcUrl, createKeypairFromFile} from './utils';
+import { getPayer, getRpcUrl, createKeypairFromFile } from './utils';
 
 /**
  * Connection to the network
@@ -61,7 +61,7 @@ const PROGRAM_KEYPAIR_PATH = path.join(PROGRAM_PATH, 'helloworld-keypair.json');
  */
 class GreetingAccount {
   txt: string = '';
-  constructor(fields: {txt: string} | undefined = undefined) {
+  constructor(fields: { txt: string } | undefined = undefined) {
     if (fields) {
       this.txt = fields.txt;
     }
@@ -72,7 +72,7 @@ class GreetingAccount {
  * Borsh schema definition for greeting accounts
  */
 const GreetingSchema = new Map([
-  [GreetingAccount, {kind: 'struct', fields: [['txt', 'String']]}],
+  [GreetingAccount, { kind: 'struct', fields: [['txt', 'String']] }],
 ]);
 
 /**
@@ -99,7 +99,7 @@ export async function establishConnection(): Promise<void> {
 export async function establishPayer(): Promise<void> {
   let fees = 0;
   if (!payer) {
-    const {feeCalculator} = await connection.getRecentBlockhash();
+    const { feeCalculator } = await connection.getRecentBlockhash();
 
     // Calculate the cost to fund the greeter account
     fees += await connection.getMinimumBalanceForRentExemption(GREETING_SIZE);
@@ -203,7 +203,7 @@ export async function sayHello(msg: string): Promise<void> {
   let messageAccount = new GreetingAccount();
   messageAccount.txt = msg;
   const instruction = new TransactionInstruction({
-    keys: [{pubkey: greetedPubkey, isSigner: false, isWritable: true}],
+    keys: [{ pubkey: greetedPubkey, isSigner: false, isWritable: true }],
     programId,
     data: Buffer.from(borsh.serialize(GreetingSchema, messageAccount)), // All instructions are hellos
   });
